@@ -1,0 +1,1 @@
+export type TicketPriority = 'Alta' | 'Media' | 'Baja'
