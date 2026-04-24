@@ -20,7 +20,12 @@ Write-Host "[1/4] Levantando backend con Docker en puerto $BackendPort..." -Fore
 Push-Location $backendDir
 $env:BACKEND_PORT = $BackendPort
 docker compose down
-docker compose up -d --build
+try {
+  docker compose up -d --build
+} catch {
+  Write-Warning "docker compose up devolvio error transitorio. Reintentando levantar servicios..."
+  docker compose up -d
+}
 docker compose ps
 Pop-Location
 
