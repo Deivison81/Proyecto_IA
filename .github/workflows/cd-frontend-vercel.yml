@@ -1,25 +1,34 @@
 name: CD Frontend Vercel
 
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - 'proyectoIAbkacend/**'
-      - 'docs/**'
+  workflow_dispatch:
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
 
 jobs:
   deploy:
     name: Deploy Frontend to Vercel
     runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main')
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Skip when Vercel secrets are not configured
+        if: ${{ secrets.VERCEL_TOKEN == '' || secrets.VERCEL_ORG_ID == '' || secrets.VERCEL_PROJECT_ID == '' || secrets.VITE_API_BASE_URL_PROD == '' }}
+        run: |
+          echo "Missing one or more Vercel secrets (VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID, VITE_API_BASE_URL_PROD). Skipping frontend deploy."
+
       - name: Deploy
+        if: ${{ secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '' && secrets.VITE_API_BASE_URL_PROD != '' }}
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
+          vercel-args: '--prod --build-env VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL_PROD }}'
           working-directory: ./

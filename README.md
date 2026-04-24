@@ -13,8 +13,8 @@ Frontend React + TypeScript + Vite para la plataforma de gestion de tickets del 
 
 ## Variables de entorno
 1. Desarrollo local: `VITE_API_BASE_URL=http://localhost:3001/api/v1`
-2. Produccion con mismo dominio: omitir `VITE_API_BASE_URL` y publicar el frontend con el `Dockerfile` de este repositorio para que Nginx haga proxy de `/api` al backend.
-3. Produccion con dominio separado: `VITE_API_BASE_URL=https://<tu-backend>.up.railway.app/api/v1`
+2. Produccion recomendada (Vercel + Railway): `VITE_API_BASE_URL=https://<tu-backend>.up.railway.app/api/v1`
+3. Opcional (mismo dominio): omitir `VITE_API_BASE_URL` y publicar el frontend con el `Dockerfile` de este repositorio para que Nginx haga proxy de `/api` al backend.
 
 ## Comandos
 1. `npm install`
@@ -22,12 +22,12 @@ Frontend React + TypeScript + Vite para la plataforma de gestion de tickets del 
 3. `npm run dev`
 4. `npm run preview`
 
-## Despliegue Railway con un solo dominio
-1. Crear un servicio frontend en Railway apuntando a la raiz del repositorio.
-2. Railway usara `Dockerfile` y `railway.json` de la raiz.
-3. Configurar `BACKEND_ORIGIN=https://<tu-backend>.up.railway.app` en el servicio frontend.
-4. Mantener `CORS_ORIGIN=https://proyectoia-production-e74c.up.railway.app` en el backend.
-5. Con esta configuracion el navegador usa `/api/v1` sobre el mismo dominio publico y Nginx reenvia al backend.
+## Despliegue recomendado (Backend Railway + Frontend Vercel)
+1. Backend en Railway usando `proyectoIAbkacend` como `Root Directory`.
+2. Frontend en Vercel usando la raiz del repositorio.
+3. En Vercel, definir `VITE_API_BASE_URL=https://<tu-backend>.up.railway.app/api/v1`.
+4. En Railway backend, definir `CORS_ORIGIN=https://<tu-frontend>.vercel.app`.
+5. Verificar `https://<tu-backend>.up.railway.app/api/v1/health` y luego login/registro desde Vercel.
 
 ## Flujos integrados
 1. Login y registro real.
