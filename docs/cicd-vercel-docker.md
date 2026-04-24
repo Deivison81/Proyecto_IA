@@ -17,7 +17,7 @@ Vercel no ejecuta `docker-compose` ni contenedores backend persistentes como Nes
 3. `.github/workflows/cd-backend-docker.yml`
    - Construccion y push de imagen backend a GHCR en `main`.
 4. `.github/workflows/cd-backend-railway.yml`
-   - Dispara deploy en Railway usando Deploy Hook al hacer push a `main`.
+   - Dispara deploy en Railway usando Deploy Hook cuando el workflow `CI` termina exitosamente en `main`.
 
 ## Secrets requeridos en GitHub
 1. Para Vercel:

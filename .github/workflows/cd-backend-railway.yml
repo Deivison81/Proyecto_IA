@@ -2,16 +2,18 @@ name: CD Backend Railway
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'proyectoIAbkacend/**'
-      - '.github/workflows/cd-backend-railway.yml'
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
 
 jobs:
   deploy:
     name: Trigger Railway Deploy Hook
     runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main')
     steps:
       - name: Trigger deploy hook
         env:
