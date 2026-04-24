@@ -22,7 +22,7 @@ services:
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_PASS}
     ports:
-      - '3000:3000'
+      - '${BACKEND_PORT:-3000}:3000'
     command: sh -c "npm run migration:run:prod && node dist/main"
     depends_on:
       postgres:
