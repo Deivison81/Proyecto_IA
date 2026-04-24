@@ -19,16 +19,29 @@ import { CatalogsModule } from './interfaces/http/catalogs/catalogs.module';
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.getOrThrow<string>('DB_HOST'),
-        port: Number(configService.getOrThrow<string>('DB_PORT')),
-        username: configService.getOrThrow<string>('DB_USERNAME'),
-        password: configService.getOrThrow<string>('DB_PASSWORD'),
-        database: configService.getOrThrow<string>('DB_NAME'),
-        autoLoadEntities: true,
-        synchronize: false,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const databaseUrl = configService.get<string>('DATABASE_URL');
+
+        if (databaseUrl && databaseUrl.trim().length > 0) {
+          return {
+            type: 'postgres' as const,
+            url: databaseUrl,
+            autoLoadEntities: true,
+            synchronize: false,
+          };
+        }
+
+        return {
+          type: 'postgres' as const,
+          host: configService.getOrThrow<string>('DB_HOST'),
+          port: Number(configService.getOrThrow<string>('DB_PORT')),
+          username: configService.getOrThrow<string>('DB_USERNAME'),
+          password: configService.getOrThrow<string>('DB_PASSWORD'),
+          database: configService.getOrThrow<string>('DB_NAME'),
+          autoLoadEntities: true,
+          synchronize: false,
+        };
+      },
     }),
     HealthModule,
     AuthModule,

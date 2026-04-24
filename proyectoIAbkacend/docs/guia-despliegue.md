@@ -36,7 +36,8 @@ Guia operativa para preparar el backend NestJS del proyecto sin ejecutar un desp
 4. Definir variables de entorno minimas en Railway:
    - `NODE_ENV=production`
    - `PORT` (la define Railway automaticamente)
-   - `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME`
+   - Opcion A (recomendada): `DATABASE_URL` (entregada por Railway Postgres)
+   - Opcion B: `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME`
    - `JWT_SECRET`, `JWT_EXPIRES_IN`
    - `MAIL_ENABLED`, `MAIL_FROM`
    - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` (solo si `MAIL_ENABLED=true`)
@@ -45,6 +46,12 @@ Guia operativa para preparar el backend NestJS del proyecto sin ejecutar un desp
 6. Validar post-deploy:
    - `https://<tu-servicio>.up.railway.app/api/v1/health`
    - `https://<tu-servicio>.up.railway.app/api/docs`
+
+## Troubleshooting rapido (Failed to fetch)
+1. En Vercel (frontend), definir `VITE_API_BASE_URL=https://<tu-servicio>.up.railway.app/api/v1`.
+2. En Railway (backend), definir `CORS_ORIGIN=https://<tu-frontend>.vercel.app`.
+3. Confirmar que `https://<tu-servicio>.up.railway.app/api/v1/health` responde `200`.
+4. Si usas Postgres de Railway, priorizar `DATABASE_URL` para evitar errores de conexion.
 
 ## Flujo del contenedor backend
 1. Construye la app NestJS con `npm run build` dentro de la imagen.

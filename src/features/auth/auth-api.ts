@@ -47,13 +47,21 @@ async function requestAuth<TPayload extends LoginInput | RegisterInput>(
   path: 'login' | 'register',
   payload: TPayload,
 ): Promise<AuthApiResponse> {
-  const response = await fetch(`${API_BASE_URL}/auth/${path}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  })
+  let response: Response
+
+  try {
+    response = await fetch(`${API_BASE_URL}/auth/${path}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+  } catch {
+    throw new Error(
+      `No se pudo conectar con la API (${API_BASE_URL}). Verifica VITE_API_BASE_URL y CORS_ORIGIN.`,
+    )
+  }
 
   if (!response.ok) {
     throw new Error(await parseError(response))

@@ -3,15 +3,18 @@ type Environment = Record<string, unknown>;
 const requiredVariables = [
   'NODE_ENV',
   'PORT',
+  'JWT_SECRET',
+  'JWT_EXPIRES_IN',
+  'MAIL_ENABLED',
+  'MAIL_FROM',
+] as const;
+
+const requiredDbVariables = [
   'DB_HOST',
   'DB_PORT',
   'DB_USERNAME',
   'DB_PASSWORD',
   'DB_NAME',
-  'JWT_SECRET',
-  'JWT_EXPIRES_IN',
-  'MAIL_ENABLED',
-  'MAIL_FROM',
 ] as const;
 
 function assertValidPort(value: unknown, variableName: string): void {
@@ -44,9 +47,27 @@ export function validateEnvironment(config: Environment): Environment {
   }
 
   assertValidPort(config.PORT, 'PORT');
-  assertValidPort(config.DB_PORT, 'DB_PORT');
   assertOptionalPort(config, 'POSTGRES_PORT');
   assertOptionalPort(config, 'PGADMIN_PORT');
+
+  const databaseUrl = config.DATABASE_URL;
+  const hasDatabaseUrl =
+    typeof databaseUrl === 'string' && databaseUrl.trim().length > 0;
+
+  if (!hasDatabaseUrl) {
+    for (const variable of requiredDbVariables) {
+      const value = config[variable];
+      if (typeof value !== 'string' || value.trim().length === 0) {
+        throw new Error(
+          `Missing required environment variable: ${variable} (or set DATABASE_URL)`,
+        );
+      }
+    }
+
+    assertValidPort(config.DB_PORT, 'DB_PORT');
+  } else {
+    assertOptionalPort(config, 'DB_PORT');
+  }
 
   const mailEnabled = String(config.MAIL_ENABLED).toLowerCase() === 'true';
   if (mailEnabled) {
