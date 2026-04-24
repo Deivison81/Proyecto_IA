@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from '../../lib/api-base-url'
 import type { AuthUser, UserRole } from '../../types/auth'
 
 export interface LoginInput {
@@ -22,8 +23,7 @@ interface ApiErrorPayload {
   message?: string | string[]
 }
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:3001/api/v1'
+const API_BASE_URL = getApiBaseUrl()
 
 async function parseError(response: Response): Promise<string> {
   try {
@@ -59,7 +59,7 @@ async function requestAuth<TPayload extends LoginInput | RegisterInput>(
     })
   } catch {
     throw new Error(
-      `No se pudo conectar con la API (${API_BASE_URL}). Verifica VITE_API_BASE_URL y CORS_ORIGIN.`,
+      `No se pudo conectar con la API (${API_BASE_URL}). Verifica VITE_API_BASE_URL, CORS_ORIGIN y el proxy /api del frontend.`,
     )
   }
 

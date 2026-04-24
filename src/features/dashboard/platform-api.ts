@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from '../../lib/api-base-url'
 import type { UserRole } from '../../types/auth'
 
 export interface PlatformUserResponse {
@@ -57,8 +58,7 @@ interface ApiErrorPayload {
   message?: string | string[]
 }
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:3001/api/v1'
+const API_BASE_URL = getApiBaseUrl()
 
 async function parseError(response: Response): Promise<string> {
   try {

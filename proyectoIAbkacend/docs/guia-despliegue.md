@@ -53,6 +53,13 @@ Guia operativa para preparar el backend NestJS del proyecto sin ejecutar un desp
 3. Confirmar que `https://<tu-servicio>.up.railway.app/api/v1/health` responde `200`.
 4. Si usas Postgres de Railway, priorizar `DATABASE_URL` para evitar errores de conexion.
 
+## Opcion D - Un solo dominio publico para frontend y API
+1. Desplegar el frontend desde la raiz del repositorio usando el `Dockerfile` de la raiz.
+2. Configurar `BACKEND_ORIGIN=https://<tu-backend>.up.railway.app` en el servicio frontend.
+3. No definir `VITE_API_BASE_URL` en produccion para que el frontend use `/api/v1`.
+4. El contenedor Nginx del frontend reenviara `/api/*` al backend y mantendra la SPA en el mismo dominio.
+5. Mantener `CORS_ORIGIN` del backend con el dominio publico del frontend.
+
 ## Flujo del contenedor backend
 1. Construye la app NestJS con `npm run build` dentro de la imagen.
 2. Al iniciar, ejecuta `npm run migration:run:prod` contra PostgreSQL.
