@@ -3,13 +3,6 @@ type Environment = Record<string, unknown>;
 const requiredVariables = [
   'NODE_ENV',
   'PORT',
-  'POSTGRES_USER',
-  'POSTGRES_PASSWORD',
-  'POSTGRES_DB',
-  'POSTGRES_PORT',
-  'PGADMIN_DEFAULT_EMAIL',
-  'PGADMIN_DEFAULT_PASSWORD',
-  'PGADMIN_PORT',
   'DB_HOST',
   'DB_PORT',
   'DB_USERNAME',
@@ -31,6 +24,16 @@ function assertValidPort(value: unknown, variableName: string): void {
   }
 }
 
+function assertOptionalPort(config: Environment, variableName: string): void {
+  const value = config[variableName];
+
+  if (value === undefined || value === null || String(value).trim().length === 0) {
+    return;
+  }
+
+  assertValidPort(value, variableName);
+}
+
 export function validateEnvironment(config: Environment): Environment {
   for (const variable of requiredVariables) {
     const value = config[variable];
@@ -41,9 +44,9 @@ export function validateEnvironment(config: Environment): Environment {
   }
 
   assertValidPort(config.PORT, 'PORT');
-  assertValidPort(config.POSTGRES_PORT, 'POSTGRES_PORT');
-  assertValidPort(config.PGADMIN_PORT, 'PGADMIN_PORT');
   assertValidPort(config.DB_PORT, 'DB_PORT');
+  assertOptionalPort(config, 'POSTGRES_PORT');
+  assertOptionalPort(config, 'PGADMIN_PORT');
 
   const mailEnabled = String(config.MAIL_ENABLED).toLowerCase() === 'true';
   if (mailEnabled) {

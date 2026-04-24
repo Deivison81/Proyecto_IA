@@ -8,6 +8,21 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
+  const corsOrigins = configService
+    .get<string>('CORS_ORIGIN')
+    ?.split(',')
+    .map((origin) => origin.trim())
+    .filter((origin) => origin.length > 0);
+
+  app.enableCors({
+    origin:
+      corsOrigins && corsOrigins.length > 0
+        ? corsOrigins
+        : ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
   app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,

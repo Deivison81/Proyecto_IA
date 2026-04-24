@@ -9,10 +9,10 @@ Frontend React + TypeScript + Vite para la plataforma de gestion de tickets del 
 
 ## Requisitos
 1. Node.js 20+
-2. Backend NestJS corriendo en `http://localhost:3000`
+2. Backend NestJS corriendo en `http://localhost:3001`
 
 ## Variables de entorno
-1. `VITE_API_BASE_URL=http://localhost:3000/api/v1`
+1. `VITE_API_BASE_URL=http://localhost:3001/api/v1`
 
 ## Comandos
 1. `npm install`
@@ -32,3 +32,4 @@ Frontend React + TypeScript + Vite para la plataforma de gestion de tickets del 
 1. `docs/etapa-8-integracion-frontend.md`
 2. `docs/checklist-predespliegue.md`
 3. `docs/roadmap-backend-proyectoIA.md`
+4. `proyectoIAbkacend/docs/guia-despliegue.md`

@@ -16,13 +16,17 @@ Vercel no ejecuta `docker-compose` ni contenedores backend persistentes como Nes
    - Despliegue automatico a Vercel en `main`.
 3. `.github/workflows/cd-backend-docker.yml`
    - Construccion y push de imagen backend a GHCR en `main`.
+4. `.github/workflows/cd-backend-railway.yml`
+   - Dispara deploy en Railway usando Deploy Hook al hacer push a `main`.
 
 ## Secrets requeridos en GitHub
 1. Para Vercel:
    - `VERCEL_TOKEN`
    - `VERCEL_ORG_ID`
    - `VERCEL_PROJECT_ID`
-2. Para runtime backend (si tu plataforma no usa secretos externos):
+2. Para Railway:
+   - `RAILWAY_DEPLOY_HOOK_URL`
+3. Para runtime backend (si tu plataforma no usa secretos externos):
    - `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME`
    - `JWT_SECRET`, `JWT_EXPIRES_IN`
    - `MAIL_ENABLED`, `MAIL_FROM`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
@@ -33,7 +37,8 @@ Vercel no ejecuta `docker-compose` ni contenedores backend persistentes como Nes
 3. Si CI pasa:
    - Frontend se publica en Vercel.
    - Backend publica imagen Docker en GHCR.
-4. El despliegue del backend en tu proveedor Docker consume la imagen nueva y reinicia servicio.
+   - Backend dispara despliegue en Railway por Deploy Hook.
+4. Railway toma la nueva revision y publica la version del backend.
 
 ## Nota operativa
 Si quieres que backend y frontend salgan en una sola URL publica, usa un reverse proxy en el proveedor del backend o una configuracion de dominio que enrute frontend y API por separado.

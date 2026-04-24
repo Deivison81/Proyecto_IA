@@ -1,0 +1,23 @@
+name: CD Backend Railway
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'proyectoIAbkacend/**'
+      - '.github/workflows/cd-backend-railway.yml'
+
+jobs:
+  deploy:
+    name: Trigger Railway Deploy Hook
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy hook
+        env:
+          RAILWAY_DEPLOY_HOOK_URL: ${{ secrets.RAILWAY_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RAILWAY_DEPLOY_HOOK_URL" ]; then
+            echo "Missing required secret: RAILWAY_DEPLOY_HOOK_URL"
+            exit 1
+          fi
+          curl -fsSL -X POST "$RAILWAY_DEPLOY_HOOK_URL"

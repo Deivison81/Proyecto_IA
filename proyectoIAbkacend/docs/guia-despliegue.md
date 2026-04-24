@@ -7,6 +7,7 @@ Guia operativa para preparar el backend NestJS del proyecto sin ejecutar un desp
 1. Docker Desktop o Docker Engine con Compose.
 2. Archivo `.env` basado en `.env.example`.
 3. Puertos disponibles: `3000`, `5433`, `5050`.
+4. Para Railway: proyecto y servicio creados en `https://railway.com`.
 
 ## Opcion A - Ejecucion local para desarrollo
 1. `Copy-Item .env.example .env`
@@ -27,6 +28,23 @@ Guia operativa para preparar el backend NestJS del proyecto sin ejecutar un desp
    - Swagger: `http://localhost:3000/api/docs`
    - Health: `http://localhost:3000/api/v1/health`
    - pgAdmin: `http://localhost:5050`
+
+## Opcion C - Despliegue en Railway
+1. Crear servicio en Railway conectado a este repositorio.
+2. Configurar `Root Directory` del servicio en `proyectoIAbkacend`.
+3. Railway detecta `railway.json` y construye con `Dockerfile`.
+4. Definir variables de entorno minimas en Railway:
+   - `NODE_ENV=production`
+   - `PORT` (la define Railway automaticamente)
+   - `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_NAME`
+   - `JWT_SECRET`, `JWT_EXPIRES_IN`
+   - `MAIL_ENABLED`, `MAIL_FROM`
+   - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` (solo si `MAIL_ENABLED=true`)
+   - `CORS_ORIGIN` con el dominio del frontend (por ejemplo Vercel)
+5. Activar Postgres gestionado en Railway o usar DB externa.
+6. Validar post-deploy:
+   - `https://<tu-servicio>.up.railway.app/api/v1/health`
+   - `https://<tu-servicio>.up.railway.app/api/docs`
 
 ## Flujo del contenedor backend
 1. Construye la app NestJS con `npm run build` dentro de la imagen.

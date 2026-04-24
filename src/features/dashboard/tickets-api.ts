@@ -51,7 +51,7 @@ interface ApiErrorPayload {
 }
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:3000/api/v1'
+  import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:3001/api/v1'
 
 async function parseError(response: Response): Promise<string> {
   try {

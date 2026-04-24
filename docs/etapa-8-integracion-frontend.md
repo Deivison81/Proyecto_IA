@@ -9,7 +9,7 @@
 6. El dashboard administrativo consume tickets globales, listado de tecnicos y operaciones de asignacion/cierre.
 7. El dashboard de plataforma consume usuarios, catalogos, parametros y auditoria reales.
 8. El formulario publico de registro de clientes ya no cierra en demo: redirige al registro real.
-9. Se agrega configuracion base `VITE_API_BASE_URL` con fallback a `http://localhost:3000/api/v1`.
+9. Se agrega configuracion base `VITE_API_BASE_URL` con fallback a `http://localhost:3001/api/v1`.
 
 ## Archivos involucrados
 1. `src/features/auth/auth-api.ts`
