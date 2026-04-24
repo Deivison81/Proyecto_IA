@@ -10,19 +10,19 @@ jobs:
   deploy:
     name: Trigger Railway Deploy Hook
     runs-on: ubuntu-latest
+    env:
+      RAILWAY_DEPLOY_HOOK_URL: ${{ secrets.RAILWAY_DEPLOY_HOOK_URL }}
     if: >
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.head_branch == 'main')
     steps:
       - name: Skip when deploy hook is not configured
-        if: ${{ secrets.RAILWAY_DEPLOY_HOOK_URL == '' }}
+        if: ${{ env.RAILWAY_DEPLOY_HOOK_URL == '' }}
         run: |
           echo "RAILWAY_DEPLOY_HOOK_URL is not configured. Skipping Railway deploy."
 
       - name: Trigger deploy hook
-        if: ${{ secrets.RAILWAY_DEPLOY_HOOK_URL != '' }}
-        env:
-          RAILWAY_DEPLOY_HOOK_URL: ${{ secrets.RAILWAY_DEPLOY_HOOK_URL }}
+        if: ${{ env.RAILWAY_DEPLOY_HOOK_URL != '' }}
         run: |
           curl -fsSL -X POST "$RAILWAY_DEPLOY_HOOK_URL"
